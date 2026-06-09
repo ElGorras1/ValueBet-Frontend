@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValueBet AI - Pro Bet Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bookie-bg { background-color: #121212; }
+        .panel-bg { background-color: #1e1e1e; border: 1px solid #333; }
+        .input-bg { background-color: #2a2a2a; color: #fff; border: 1px solid #444; }
+        .input-bg:focus { border-color: #fbbf24; outline: none; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
+        select option { background-color: #1e1e1e; color: white; }
+    </style>
+</head>
+<body class="bookie-bg text-gray-200 font-sans antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-[#0a0a0a] border-b border-yellow-500/50 px-6 py-3 flex justify-between items-center sticky top-0 z-50 shadow-md">
+    <div class="flex items-center gap-3">
+        <i class="fa-solid fa-bolt text-yellow-500 text-2xl"></i>
+        <div>
+            <h1 class="text-xl font-black tracking-wide text-white">ValueBet <span class="text-yellow-500">PRO</span></h1>
+            <p class="text-[9px] text-gray-400 uppercase tracking-widest">Motor Multi-Mercado Analítico v4.0</p>
+        </div>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-bold uppercase tracking-wider">
+        <span class="text-yellow-500 border-b-2 border-yellow-500 pb-1 cursor-pointer">Cupón Principal</span>
+        <a href="tendencias.html" class="text-gray-400 hover:text-white transition pb-1">Stats Radar</a>
+        <a href="historial.html" class="text-gray-400 hover:text-white transition pb-1">Historial Cloud</a>
+        <div class="bg-gray-800 text-emerald-400 px-3 py-1.5 rounded flex items-center gap-2 border border-gray-700 ml-2">
+            <i class="fa-solid fa-wallet"></i>
+            <input type="number" id="bankroll" value="1000" class="bg-transparent w-16 outline-none font-mono text-right" placeholder="Bank"> $
+        </div>
+    </div>
+</nav>
+
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-8 space-y-4">
+            
+            <div class="panel-bg p-4 rounded-lg flex gap-3 items-end shadow-lg border-l-4 border-l-yellow-500">
+                <div class="flex-1">
+                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">Competición</label>
+                    <select id="liga" class="w-full input-bg rounded p-2 text-sm font-bold"><option value="">Cargando ligas...</option></select>
+                </div>
+                <div class="flex-1">
+                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">Local</label>
+                    <select id="local" class="w-full input-bg rounded p-2 text-sm"><option value="">Selecciona...</option></select>
+                </div>
+                <div class="flex-1">
+                    <label class="text-[10px] text-gray-400 uppercase font-bold mb-1 block">Visitante</label>
+                    <select id="visitante" class="w-full input-bg rounded p-2 text-sm"><option value="">Selecciona...</option></select>
+                </div>
+            </div>
+
+            <form id="form-builder" class="space-y-4">
+                
+                <div class="panel-bg rounded-lg overflow-hidden">
+                    <div class="bg-[#242424] p-3 border-b border-[#333] flex justify-between items-center">
+                        <span class="text-sm font-bold text-gray-200"><i class="fa-regular fa-star text-yellow-500 mr-2"></i> Resultado Final (1X2) *</span>
+                    </div>
+                    <div class="p-4 grid grid-cols-3 gap-2">
+                        <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">Local</span><input type="number" id="c_1" step="0.01" required class="input-bg rounded p-2 text-center font-mono"></div>
+                        <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">Empate</span><input type="number" id="c_x" step="0.01" required class="input-bg rounded p-2 text-center font-mono"></div>
+                        <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">Visitante</span><input type="number" id="c_2" step="0.01" required class="input-bg rounded p-2 text-center font-mono"></div>
+                    </div>
+                </div>
+
+                <div class="panel-bg rounded-lg overflow-hidden">
+                    <div class="bg-[#242424] p-3 border-b border-[#333]">
+                        <span class="text-sm font-bold text-gray-200"><i class="fa-regular fa-star text-yellow-500 mr-2"></i> Doble Oportunidad</span>
+                    </div>
+                    <div class="p-4 grid grid-cols-3 gap-2">
+                        <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">1X (Local o Empate)</span><input type="number" id="c_1x" step="0.01" class="input-bg rounded p-2 text-center font-mono"></div>
+                        <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">12 (Cualquiera Gana)</span><input type="number" id="c_12" step="0.01" class="input-bg rounded p-2 text-center font-mono"></div>
+                        <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">X2 (Visitante o Empate)</span><input type="number" id="c_x2" step="0.01" class="input-bg rounded p-2 text-center font-mono"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="panel-bg rounded-lg overflow-hidden">
+                        <div class="bg-[#242424] p-3 border-b border-[#333]">
+                            <span class="text-sm font-bold text-gray-200"><i class="fa-regular fa-star text-yellow-500 mr-2"></i> Sin Empate (DNB)</span>
+                        </div>
+                        <div class="p-4 grid grid-cols-2 gap-2">
+                            <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">Local DNB</span><input type="number" id="c_dnb_1" step="0.01" class="input-bg rounded p-2 text-center font-mono"></div>
+                            <div class="flex flex-col"><span class="text-[10px] text-gray-400 mb-1">Visitante DNB</span><input type="number" id="c_dnb_2" step="0.01" class="input-bg rounded p-2 text-center font-mono"></div>
+                        </div>
+                    </div>
+                    <div class="panel-bg rounded-lg overflow-hidden">
+                        <div class="bg-[#242424] p-3 border-b border-[#333]">
+                            <span class="text-sm font-bold text-gray-200"><i class="fa-solid fa-layer-group text-blue-400 mr-2"></i> Dinámico: Goles Totales</span>
+                        </div>
+                        <div class="p-4 flex gap-2">
+                            <div class="flex flex-col flex-1"><span class="text-[10px] text-gray-400 mb-1">Línea (+ Over)</span>
+                                <select id="l_goles" class="input-bg rounded p-2 text-center font-mono"><option value="1.5">Más de 1.5</option><option value="2.5" selected>Más de 2.5</option><option value="3.5">Más de 3.5</option><option value="4.5">Más de 4.5</option></select>
+                            </div>
+                            <div class="flex flex-col flex-1"><span class="text-[10px] text-gray-400 mb-1">Cuota Bookie</span><input type="number" id="c_goles" step="0.01" class="input-bg rounded p-2 text-center font-mono"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-bg rounded-lg overflow-hidden">
+                    <div class="bg-[#242424] p-3 border-b border-[#333]">
+                        <span class="text-sm font-bold text-gray-200"><i class="fa-solid fa-sliders text-emerald-400 mr-2"></i> Líneas Dinámicas de Tensión (Elige tu límite)</span>
+                    </div>
+                    <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        
+                        <div class="bg-[#1a1a1a] p-3 border border-[#333] rounded">
+                            <span class="text-xs text-gray-300 font-bold block mb-2"><i class="fa-solid fa-flag text-blue-400 mr-1"></i> Línea de Corners</span>
+                            <div class="flex gap-2">
+                                <select id="l_corners" class="input-bg rounded p-1.5 text-xs w-1/2">
+                                    <option value="7.5">+ 7.5</option><option value="8.5">+ 8.5</option><option value="9.5" selected>+ 9.5</option><option value="10.5">+ 10.5</option><option value="11.5">+ 11.5</option>
+                                </select>
+                                <input type="number" id="c_corners" step="0.01" placeholder="Cuota" class="input-bg rounded p-1.5 text-xs w-1/2 text-center">
+                            </div>
+                        </div>
+
+                        <div class="bg-[#1a1a1a] p-3 border border-[#333] rounded">
+                            <span class="text-xs text-gray-300 font-bold block mb-2"><i class="fa-solid fa-shoe-prints text-orange-400 mr-1"></i> Línea de Faltas</span>
+                            <div class="flex gap-2">
+                                <select id="l_faltas" class="input-bg rounded p-1.5 text-xs w-1/2">
+                                    <option value="18.5">+ 18.5</option><option value="20.5">+ 20.5</option><option value="22.5" selected>+ 22.5</option><option value="24.5">+ 24.5</option>
+                                </select>
+                                <input type="number" id="c_faltas" step="0.01" placeholder="Cuota" class="input-bg rounded p-1.5 text-xs w-1/2 text-center">
+                            </div>
+                        </div>
+
+                        <div class="bg-[#1a1a1a] p-3 border border-[#333] rounded">
+                            <span class="text-xs text-gray-300 font-bold block mb-2"><i class="fa-solid fa-clone text-yellow-500 mr-1"></i> Línea de Tarjetas</span>
+                            <div class="flex gap-2">
+                                <select id="l_tarjetas" class="input-bg rounded p-1.5 text-xs w-1/2">
+                                    <option value="2.5">+ 2.5</option><option value="3.5">+ 3.5</option><option value="4.5" selected>+ 4.5</option><option value="5.5">+ 5.5</option>
+                                </select>
+                                <input type="number" id="c_tarjetas" step="0.01" placeholder="Cuota" class="input-bg rounded p-1.5 text-xs w-1/2 text-center">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-ejecutar" class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded shadow-[0_0_15px_rgba(234,179,8,0.2)] transition text-lg uppercase tracking-wide mt-4">
+                    Auditar Cuotas (Buscar Valor)
+                </button>
+            </form>
+        </div>
+
+        <div class="lg:col-span-4">
+            <div id="zona_impresion" class="panel-bg rounded-lg h-full flex flex-col relative sticky top-20 border border-gray-700">
+                <div class="bg-[#242424] p-4 border-b border-[#333] flex justify-between items-center rounded-t-lg">
+                    <h3 class="text-sm font-bold text-white uppercase"><i class="fa-solid fa-receipt text-yellow-500 mr-2"></i> Cupón Inteligente</h3>
+                    <button onclick="descargarPDF()" class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-print"></i></button>
+                </div>
+                <div id="display_resultados" class="flex-1 p-4 flex flex-col space-y-3 overflow-y-auto">
+                    <div class="flex-1 flex flex-col justify-center items-center text-center opacity-50 mt-10">
+                        <i class="fa-solid fa-magnifying-glass-chart text-4xl mb-3"></i>
+                        <p class="text-xs">Llena las cuotas y selecciona tus líneas.<br>La IA + Poisson buscarán errores matemáticos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let dataGlobal = {};
+
+        window.onload = async () => {
+            try {
+                const response = await fetch('https://proyecto-final-db6a.onrender.com/opciones_mercado');
+                dataGlobal = await response.json();
+                const selectLiga = document.getElementById('liga');
+                Object.keys(dataGlobal).forEach(l => selectLiga.innerHTML += `<option value="${l}">${l}</option>`);
+
+                selectLiga.onchange = () => {
+                    const equipos = dataGlobal[selectLiga.value] || [];
+                    const opts = '<option value="">Selecciona...</option>' + equipos.map(e => `<option value="${e}">${e}</option>`).join('');
+                    document.getElementById('local').innerHTML = opts;
+                    document.getElementById('visitante').innerHTML = opts;
+                };
+            } catch (error) { console.error(error); }
+        };
+
+        document.getElementById('form-builder').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-ejecutar');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> INFERENCIA DE POISSON...';
+
+            const getMarket = (l_id, c_id) => {
+                const c = parseFloat(document.getElementById(c_id).value);
+                return c > 0 ? { linea: parseFloat(document.getElementById(l_id).value), cuota: c } : null;
+            };
+
+            const payload = {
+                liga: document.getElementById('liga').value,
+                local: document.getElementById('local').value,
+                visitante: document.getElementById('visitante').value,
+                bankroll: parseFloat(document.getElementById('bankroll').value),
+                cuotas: {
+                    c_1: parseFloat(document.getElementById('c_1').value),
+                    c_x: parseFloat(document.getElementById('c_x').value),
+                    c_2: parseFloat(document.getElementById('c_2').value),
+                    c_1x: parseFloat(document.getElementById('c_1x').value || 0),
+                    c_12: parseFloat(document.getElementById('c_12').value || 0),
+                    c_x2: parseFloat(document.getElementById('c_x2').value || 0),
+                    c_dnb_1: parseFloat(document.getElementById('c_dnb_1').value || 0),
+                    c_dnb_2: parseFloat(document.getElementById('c_dnb_2').value || 0),
+                    goles: getMarket('l_goles', 'c_goles'),
+                    corners: getMarket('l_corners', 'c_corners'),
+                    faltas: getMarket('l_faltas', 'c_faltas'),
+                    tarjetas: getMarket('l_tarjetas', 'c_tarjetas')
+                }
+            };
+
+            try {
+                const response = await fetch('https://proyecto-final-db6a.onrender.com/analisis_pro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                const display = document.getElementById('display_resultados');
+                
+                if (response.ok) {
+                    if (data.picks_valor.length > 0) {
+                        let html = '';
+                        data.picks_valor.forEach(pick => {
+                            html += `
+                            <div class="bg-[#1a1a1a] border border-[#333] p-3 rounded flex justify-between items-center border-l-2 ${pick.ev > 1.10 ? 'border-l-emerald-500' : 'border-l-yellow-500'} shadow-md">
+                                <div>
+                                    <p class="text-[10px] text-gray-500 font-bold uppercase">${pick.mercado}</p>
+                                    <p class="text-sm font-bold text-white">${pick.seleccion}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-black text-yellow-500">${pick.cuota}</p>
+                                    <p class="text-[9px] text-emerald-400">EV: ${pick.ev} | Prob: ${pick.prob}%</p>
+                                </div>
+                            </div>`;
+                        });
+
+                        // Construir el HTML del reporte táctico
+                        let informeHTML = '';
+                        data.informe.forEach(linea => {
+                            informeHTML += `<li class="flex gap-2 items-start"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> <span>${linea}</span></li>`;
+                        });
+
+                        display.innerHTML = `
+                            <div class="bg-blue-900/20 border border-blue-500/50 p-4 rounded mb-2 shadow-inner">
+                                <p class="text-[10px] text-blue-400 uppercase font-bold mb-1"><i class="fa-solid fa-scale-unbalanced mr-1"></i> Gestión Kelly</p>
+                                <div class="flex justify-between items-end mt-2">
+                                    <p class="text-xs text-blue-200">Arriesgar:<br><strong class="text-white text-lg">${data.kelly_pct}%</strong></p>
+                                    <p class="text-xl font-black text-emerald-400">$${data.stake_usd}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800/60 border border-gray-600 rounded p-4 mb-3">
+                                <p class="text-[10px] text-yellow-500 uppercase font-bold mb-3"><i class="fa-solid fa-microchip mr-1"></i> Análisis Táctico del Oráculo</p>
+                                <ul class="text-xs text-gray-300 space-y-2 leading-relaxed">
+                                    ${informeHTML}
+                                </ul>
+                            </div>
+
+                            <div class="flex flex-col space-y-2">${html}</div>
+                        `;
+                    } else {
+                        display.innerHTML = `
+                            <div class="bg-red-900/20 border border-red-500/50 p-6 rounded text-center">
+                                <i class="fa-solid fa-hand text-4xl text-red-500 mb-3"></i>
+                                <p class="text-sm text-red-300 font-bold">Sin Valor Detectado</p>
+                                <p class="text-xs text-red-400 mt-2">La casa de apuestas ha ajustado sus cuotas perfectamente. Evita este partido.</p>
+                            </div>`;
+                    }
+                } else { display.innerHTML = `<p class="text-red-400 text-xs text-center">${data.detail}</p>`; }
+            } catch (error) { display.innerHTML = `<p class="text-red-400 text-xs text-center">Error en el servidor Python.</p>`;
+            } finally { btn.innerHTML = 'Auditar Cuotas (Buscar Valor)'; }
+        });
+
+        function descargarPDF() {
+            const el = document.getElementById('zona_impresion');
+            html2pdf().set({ margin: 0.1, filename: 'ValueBet_Cupon.pdf', jsPDF: { unit: 'in', format: 'a5', orientation: 'portrait' } }).from(el).save();
+        }
+    </script>
+</body>
+</html>
